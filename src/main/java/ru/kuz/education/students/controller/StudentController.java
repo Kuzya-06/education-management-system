@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import ru.kuz.education.auth.config.MyUserDetails;
@@ -21,6 +22,7 @@ import ru.kuz.education.students.service.StudentService;
 import ru.kuz.education.students.service.props.MinioProperties;
 import ru.kuz.education.task.model.Task;
 import ru.kuz.education.task.service.TaskService;
+import ru.kuz.education.teachers.model.Teacher;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,18 +52,17 @@ public class StudentController {
             Model model) {
         log.info("Начало getDashboard()");
         log.info("{}", userDetails.getMyUser());
-        // Пример задачи от преподавателя
-        String task = "Решить задачу по математике до 25.03.2025.";
+
 
         Student student = studentService.getProfile(userDetails);
+        Long teacherId = studentService.getSelectedTeacherId(student.getId());
+        List<Task> tasks = taskService.findTasksByStudentAndTeacher(student.getId(), teacherId);
 
         model.addAttribute("student", student); // Передаем объект student в модель
+        model.addAttribute("tasks", tasks);
         model.addAttribute("minio", minioProperties); // Передаем объект student в модель
         log.info("Minio properties: {}", minioProperties); // Логирование minio properties
 
-        Long studentId = userDetails.getMyUser().getStudent().getId();
-        List<Task> tasks = taskService.findTasksByStudentId(studentId);
-        model.addAttribute("task", task);
         return new ModelAndView("student-dashboard");
     }
 
@@ -111,4 +112,19 @@ public class StudentController {
         log.info("Начало uploadImage(), где userId =  {}, image = {}", userId, image);
         studentService.uploadImage(userId, image);
     }
+
+    @GetMapping("/select-teacher")
+    public ModelAndView selectTeacher(Model model) {
+        List<Teacher> teachers = studentService.getAllTeachers();
+        model.addAttribute("teachers", teachers);
+        return new ModelAndView("select-teacher");
+    }
+
+    @PostMapping("/select-teacher")
+    public ModelAndView saveSelectedTeacher(@AuthenticationPrincipal MyUserDetails userDetails,
+                                            @RequestParam Long teacherId) {
+        studentService.assignTeacher(userDetails.getMyUser().getStudent().getId(), teacherId);
+        return new ModelAndView("redirect:/students/dashboard");
+    }
+
 }

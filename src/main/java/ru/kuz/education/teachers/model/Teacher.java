@@ -11,6 +11,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import ru.kuz.education.auth.model.MyUser;
 import ru.kuz.education.students.model.Student;
@@ -19,7 +21,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @ToString(exclude = "user")
 @Entity
 @Table(name = "teachers")
@@ -35,25 +38,21 @@ public class Teacher {
     )
     private String firstName;
 
-    @Column(
-//            nullable = false,
-            name = "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(
-//            nullable = false,
-            name = "birth_date")
+
+
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
-//    @Column(nullable = false)
+
     private String city;
 
-//    @Column(nullable = false)
+
     private String phone;
 
-    @Column(
-//            nullable = false,
-            unique = true)
+    @Column(unique = true)
     private String email;
 
     @Column
@@ -67,4 +66,10 @@ public class Teacher {
 
     @ManyToMany(mappedBy = "teachers")
     private Set<Student> students = new HashSet<>();
+
+    // Убираем Lombok-аннотированные hashCode() и equals()
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

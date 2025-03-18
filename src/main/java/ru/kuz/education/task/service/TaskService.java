@@ -20,6 +20,11 @@ public interface TaskService {
 
     List<Task> getAllByTeacherId(Long teacherId);
 
+    List<Task> findTasksByStudentAndTeacher(Long studentId, Long teacherId);
+
+    Task save(Task task);
+
+
 
     /**
      * Получить все задачи, которые должны быть выполнены в ближайшее время.

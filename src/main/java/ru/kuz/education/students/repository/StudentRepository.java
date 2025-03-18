@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kuz.education.students.model.Student;
 
+import java.util.List;
+
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
@@ -24,5 +26,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             @Param("user_id") Long id,
             @Param("photo_url") String fileName
     );
+
+    @Query("SELECT t.id FROM Student s JOIN s.teachers t WHERE s.id = :studentId")
+    Long findTeacherIdByStudentId(@Param("studentId") Long studentId);
+
+    List<Student> findByTeachersId(Long teacherId);
 
 }

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.kuz.education.auth.config.MyUserDetails;
 import ru.kuz.education.image.model.UserImage;
 import ru.kuz.education.students.model.Student;
+import ru.kuz.education.students.service.StudentService;
 import ru.kuz.education.students.service.props.MinioProperties;
 import ru.kuz.education.task.model.Task;
 import ru.kuz.education.task.service.TaskService;
@@ -34,34 +35,39 @@ public class TeacherController {
     private static final Logger log = LoggerFactory.getLogger(TeacherController.class); // Логгер
 
     private final TaskService taskService;
+    private final StudentService studentService;
     private final TeacherService teacherService;
     private final MinioProperties minioProperties;
 
-    public TeacherController(TaskService taskService, TeacherService teacherService, MinioProperties minioProperties) {
+    public TeacherController(TaskService taskService, StudentService studentService, TeacherService teacherService, MinioProperties minioProperties) {
         this.taskService = taskService;
+        this.studentService = studentService;
         this.teacherService = teacherService;
         this.minioProperties = minioProperties;
     }
 
 
     @GetMapping("/dashboard")
-    public ModelAndView getDashboard(
-            @AuthenticationPrincipal MyUserDetails userDetails,
-            Model model) {
+    public ModelAndView getDashboard(@AuthenticationPrincipal MyUserDetails userDetails,
+                                     Model model) {
 
         log.info("Начало getDashboard()");
-        log.info("{}", userDetails.getMyUser());
+        log.info("userDetails.getMyUser() = {}", userDetails.getMyUser());
 
         Teacher teacher = teacherService.getProfile(userDetails);
         if (teacher == null) {
             return new ModelAndView("redirect:/login");
         }
 
-
         Long teacherId = teacher.getId();
+
+        // Получаем всех учеников, которые выбрали этого преподавателя
+        List<Student> students = studentService.getStudentsByTeacherId(teacherId);
+
         List<Task> tasks = taskService.getAllByTeacherId(teacherId);
 
         model.addAttribute("teacher", teacher);
+        model.addAttribute("students", students);
         model.addAttribute("tasks", tasks);
         model.addAttribute("minio", minioProperties); // Передаем объект student в модель
         log.info("MinioProperties: {}", minioProperties); // Логирование minio properties
@@ -117,18 +123,24 @@ public class TeacherController {
     }
 
     @PostMapping("/tasks")
-    public ModelAndView createTask(
-            @ModelAttribute Task task,
-            @AuthenticationPrincipal MyUserDetails userDetails) {
-        log.info("Начало createTask()");
-        if (userDetails == null) {
-            log.warn("Пользователь не аутентифицирован. Перенаправление на страницу входа.");
-            return new ModelAndView("redirect:/login");
-        }
-        log.info("Task => {}", task);
-        Task createTask = taskService.createTask(task, userDetails);// Замените на реальный ID преподавателя
-        log.info("createTask => {}", createTask);
-        return new ModelAndView("teacher-dashboard");
+    public ModelAndView createTask(@ModelAttribute Task task,
+                                   @RequestParam Long studentId,
+                                   @AuthenticationPrincipal MyUserDetails userDetails) {
+//        log.info("Начало createTask()");
+//        if (userDetails == null) {
+//            log.warn("Пользователь не аутентифицирован. Перенаправление на страницу входа.");
+//            return new ModelAndView("redirect:/login");
+//        }
+//        log.info("Task => {}", task);
+//        Task createTask = taskService.createTask(task, userDetails);// Замените на реальный ID преподавателя
+//        log.info("createTask => {}", createTask);
+//        return new ModelAndView("teacher-dashboard");
+
+        Teacher teacher = teacherService.getProfile(userDetails);
+        task.setTeacher(teacher);
+        task.setStudent(studentService.getStudentById(studentId));
+        taskService.save(task);
+        return new ModelAndView("redirect:/teachers/dashboard");
     }
 
 //    @GetMapping("/teachers/dashboard")

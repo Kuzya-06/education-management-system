@@ -36,4 +36,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t JOIN t.teacher te JOIN te.students s WHERE s.id = :studentId")
     List<Task> findTasksByStudentId(@Param("studentId") Long studentId);
 
+    List<Task> findByStudentIdAndTeacherId(Long studentId, Long teacherId);
+
 }

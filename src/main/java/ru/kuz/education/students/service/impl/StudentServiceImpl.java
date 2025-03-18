@@ -11,9 +11,12 @@ import ru.kuz.education.image.model.UserImage;
 import ru.kuz.education.students.repository.StudentRepository;
 import ru.kuz.education.image.service.ImageService;
 import ru.kuz.education.students.service.StudentService;
+import ru.kuz.education.teachers.model.Teacher;
+import ru.kuz.education.teachers.repository.TeacherRepository;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -21,13 +24,14 @@ public class StudentServiceImpl implements StudentService {
     private static final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class); // Логгер
 
     private final StudentRepository studentRepository;
-
     private final ImageService imageService;
+    private final TeacherRepository teacherRepository;
 
-    public StudentServiceImpl(StudentRepository studentRepository, ImageService imageService) {
+    public StudentServiceImpl(StudentRepository studentRepository,
+                              ImageService imageService, TeacherRepository teacherRepository) {
         this.studentRepository = studentRepository;
-
         this.imageService = imageService;
+        this.teacherRepository = teacherRepository;
     }
 
     @Override
@@ -85,6 +89,36 @@ public class StudentServiceImpl implements StudentService {
         String fileName = imageService.upload(image);
         log.info("fileName = {}", fileName);
         studentRepository.addImage(id, fileName);
+    }
+
+    @Override
+    public List<Teacher> getAllTeachers() {
+        return teacherRepository.findAll();
+    }
+
+    @Override
+    public void assignTeacher(Long studentId, Long teacherId) {
+        Student student = studentRepository.findById(studentId).orElseThrow();
+        Teacher teacher = teacherRepository.findById(teacherId).orElseThrow();
+        student.getTeachers().clear(); // Очистить предыдущего преподавателя
+        student.getTeachers().add(teacher);
+        studentRepository.save(student);
+    }
+
+    @Override
+    public Long getSelectedTeacherId(Long studentId) {
+        return studentRepository.findTeacherIdByStudentId(studentId);
+    }
+
+    @Override
+    public Student getStudentById(Long studentId) {
+        return studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Студент не найден"));
+    }
+
+    @Override
+    public List<Student> getStudentsByTeacherId(Long teacherId) {
+        return studentRepository.findByTeachersId(teacherId);
     }
 
 }

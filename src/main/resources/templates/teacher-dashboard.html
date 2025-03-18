@@ -9,9 +9,10 @@
 <div class="container mt-5">
     <!-- Шапка с фамилией и картинкой -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Dashboard преподавателя</h1>
-        <a th:href="@{/teachers/profile}">
-            <div>
+        <h1 th:align="center">Преподаватель</h1>
+        <br>
+        <a th:href="@{/teachers/profile}" class="d-flex align-items-center text-decoration-none">
+
                 <img th:if="${teacher != null and teacher.photoUrl != null and minio != null}"
                      th:src="${minio.url + '/' + minio.bucket + '/' + teacher.photoUrl}"
                      alt="Фотография преподавателя"
@@ -24,41 +25,23 @@
                      width="150"
                      height="150"
                      class="rounded-circle">
-            </div>
+                <div>
+                    <h2 class="mb-0" th:text="${teacher.firstName + ' ' + teacher.lastName}">Имя Фамилия</h2>
+                    <p class="text-muted mb-0" th:text="${teacher.email}">email@example.com</p>
+                </div>
+
         </a>
-        <br>
     </div>
 
-    <div class="card">
+    <!-- Блок со списком учеников -->
+    <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Список учеников</h5>
-            <div th:each="student : ${students}">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${student.firstName + ' ' + student.lastName}">Имя ученика</h5>
-                        <form th:action="@{/teachers/assign-task}" method="post">
-                            <input type="hidden" name="studentId" th:value="${student.id}">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Заголовок задачи:</label>
-                                <input type="text" class="form-control" name="title" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Описание задачи:</label>
-                                <textarea class="form-control" name="description" rows="3" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="expirationDate" class="form-label">Дата выполнения:</label>
-                                <input type="datetime-local" class="form-control" name="expirationDate" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="videoUrl" class="form-label">Ссылка на видео:</label>
-                                <input type="url" class="form-control" name="videoUrl">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Назначить задачу</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <h5 class="card-title">Мои ученики</h5>
+            <ul class="list-group">
+                <li th:each="student : ${students}" class="list-group-item">
+                    <span th:text="${student.firstName + ' ' + student.lastName}"></span>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -83,6 +66,12 @@
                     <label for="videoUrl" class="form-label">Ссылка на видео:</label>
                     <input type="url" class="form-control" id="videoUrl" name="videoUrl">
                 </div>
+                <div class="mb-3">
+                    <label for="studentId" class="form-label">Выберите ученика:</label>
+                    <select class="form-control" id="studentId" name="studentId" required>
+                        <option th:each="student : ${students}" th:value="${student.id}" th:text="${student.firstName + ' ' + student.lastName}"></option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">Создать задачу</button>
             </form>
         </div>
@@ -98,17 +87,11 @@
                         <h5 class="card-title" th:text="${task.title}">Заголовок задачи</h5>
                         <p class="card-text" th:text="${task.description}">Описание задачи</p>
                         <p class="card-text"><small class="text-muted" th:text="${task.expirationDate}">Дата выполнения</small></p>
-<!--                        <div th:if="${task.videoUrl}">-->
-<!--                            <video width="200" height="150" controls>-->
-<!--                                <source th:src="${task.videoUrl}" type="video/mp4">-->
-<!--                                Ваш браузер не поддерживает видео.-->
-<!--                            </video>-->
-<!--                        </div>-->
-                        <iframe width="275" height="200"
-                                th:src=" ${task.videoUrl}"
-                                frameborder="0"
-                                allowfullscreen>
-                        </iframe>
+                        <p><strong>Ученик:</strong>
+                            <span th:if="${task.student != null}" th:text="${task.student.firstName + ' ' + task.student.lastName}"></span>
+                            <span th:unless="${task.student != null}">Не назначено</span>
+                        </p>
+                        <iframe width="275" height="200" th:src="${task.videoUrl}" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -116,7 +99,7 @@
     </div>
 
     <!-- Кнопка выхода -->
-    <a href="#" onclick="document.getElementById('logout-form').submit();" class="btn btn-danger">Выйти</a>
+    <a href="#" onclick="document.getElementById('logout-form').submit();" class="btn btn-danger mt-3">Выйти</a>
     <form id="logout-form" th:action="@{/logout}" method="post" style="display: none;">
         <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     </form>

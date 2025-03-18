@@ -39,10 +39,22 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> findTasksByStudentAndTeacher(Long studentId, Long teacherId) {
+        return taskRepository.findByStudentIdAndTeacherId(studentId, teacherId);
+    }
+
+    @Override
     public List<Task> getAllSoonTasks(Duration duration) {
         LocalDateTime now = LocalDateTime.now();
         return taskRepository.findAllSoonTasks(now, now.plus(duration));
     }
+
+    @Override
+    @Transactional
+    public Task save(Task task) {
+        return taskRepository.save(task);
+    }
+
 
     @Override
     @Transactional

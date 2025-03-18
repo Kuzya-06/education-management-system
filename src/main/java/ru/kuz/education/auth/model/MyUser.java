@@ -12,11 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import ru.kuz.education.students.model.Student;
 import ru.kuz.education.teachers.model.Teacher;
 
-@Data
+@Getter
+@Setter
 @ToString(exclude = {"student", "teacher"})
 @Entity
 @Table(name="my_users")
@@ -40,4 +43,10 @@ public class MyUser {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference // Указываем, что это зависимая сторона
     private Teacher teacher; // Связь с профилем преподавателя
+
+    // Убираем Lombok-аннотированные hashCode() и equals()
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
