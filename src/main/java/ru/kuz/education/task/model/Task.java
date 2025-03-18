@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.kuz.education.auth.model.MyUser;
 import ru.kuz.education.students.model.Student;
+import ru.kuz.education.teachers.model.Teacher;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -32,12 +33,13 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")  // Добавляем поле для хранения ID преподавателя
-    private Long userId;
+//    @Column(name = "user_id")  // Добавляем поле для хранения ID преподавателя
+//    private Long userId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-//    private MyUser user;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Teacher teacher;
+
 
     private String title;
     private String description;

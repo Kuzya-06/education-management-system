@@ -12,10 +12,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 import ru.kuz.education.students.model.Student;
 import ru.kuz.education.teachers.model.Teacher;
 
 @Data
+@ToString(exclude = {"student", "teacher"})
 @Entity
 @Table(name="my_users")
 public class MyUser {

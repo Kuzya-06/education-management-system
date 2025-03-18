@@ -13,6 +13,7 @@ import ru.kuz.education.task.model.Task;
 import ru.kuz.education.task.model.TaskImage;
 import ru.kuz.education.task.repository.TaskRepository;
 import ru.kuz.education.task.service.TaskService;
+import ru.kuz.education.teachers.model.Teacher;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -33,8 +34,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByUserId(Long userId) {
-        return taskRepository.findAllByUserId(userId);
+    public List<Task> getAllByTeacherId(Long teacherId) {
+        return taskRepository.findByTeacherId(teacherId);
     }
 
     @Override
@@ -59,9 +60,12 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public Task createTask(Task task, MyUserDetails userDetails) {
         // Получаем MyUser из MyUserDetails
-        MyUser user = userDetails.getMyUser();
-        log.info("User => {}", user);
-        task.setUserId(user.getId());  // Устанавливаем ID пользователя
+        MyUser myUser = userDetails.getMyUser();
+        log.info("User => {}", myUser);
+        Teacher teacher = myUser.getTeacher();
+
+        log.info("myUser.teacher => {}", teacher);
+        task.setTeacher(teacher); // Устанавливаем ID teacher
         return taskRepository.save(task);
     }
 

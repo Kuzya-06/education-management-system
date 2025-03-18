@@ -1,6 +1,7 @@
 package ru.kuz.education.teachers.repository;
 
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
      * @param userId ID пользователя
      * @return преподаватель
      */
+    @EntityGraph(attributePaths = {"students"})
     Optional<Teacher> findByUserId(Long userId);
 
     @Modifying

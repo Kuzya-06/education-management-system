@@ -9,12 +9,15 @@ import ru.kuz.education.auth.model.MyUser;
 import ru.kuz.education.image.model.UserImage;
 import ru.kuz.education.image.service.ImageService;
 import ru.kuz.education.students.service.impl.StudentServiceImpl;
+import ru.kuz.education.task.model.Task;
+import ru.kuz.education.task.repository.TaskRepository;
 import ru.kuz.education.teachers.model.Teacher;
 import ru.kuz.education.teachers.repository.TeacherRepository;
 import ru.kuz.education.teachers.service.TeacherService;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,13 +27,17 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final ImageService imageService;
+    private final TaskRepository taskRepository;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository, ImageService imageService) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, ImageService imageService, TaskRepository taskRepository) {
         this.teacherRepository = teacherRepository;
         this.imageService = imageService;
+        this.taskRepository = taskRepository;
     }
 
+
     @Override
+    @Transactional  // Добавляем транзакцию
     public Teacher getProfile(MyUserDetails userDetails) {
         // Получаем MyUser из MyUserDetails
         MyUser user = userDetails.getMyUser();

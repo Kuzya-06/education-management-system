@@ -13,13 +13,15 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    /**
-     * Найти все задачи по ID пользователя.
-     *
-     * @param userId ID пользователя
-     * @return список задач
-     */
-    List<Task> findAllByUserId(Long userId);
+//    /**
+//     * Найти все задачи по ID пользователя.
+//     *
+//     * @param userId ID пользователя
+//     * @return список задач
+//     */
+//    List<Task> findAllByUserId(Long userId);
+
+    List<Task> findByTeacherId(Long teacherId);
 
     /**
      * Найти все задачи, которые должны быть выполнены в указанный период.
@@ -31,7 +33,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t WHERE t.expirationDate BETWEEN :start AND :end")
     List<Task> findAllSoonTasks(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("SELECT t FROM Task t JOIN t.userId te JOIN t.student s WHERE s.id = :studentId")
+    @Query("SELECT t FROM Task t JOIN t.teacher te JOIN te.students s WHERE s.id = :studentId")
     List<Task> findTasksByStudentId(@Param("studentId") Long studentId);
 
 }

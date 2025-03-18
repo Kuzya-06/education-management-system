@@ -53,11 +53,16 @@ public class TeacherController {
         log.info("{}", userDetails.getMyUser());
 
         Teacher teacher = teacherService.getProfile(userDetails);
+        if (teacher == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+
+        Long teacherId = teacher.getId();
+        List<Task> tasks = taskService.getAllByTeacherId(teacherId);
+
         model.addAttribute("teacher", teacher);
-
-        List<Task> tasks = taskService.getAllTasks();
         model.addAttribute("tasks", tasks);
-
         model.addAttribute("minio", minioProperties); // Передаем объект student в модель
         log.info("MinioProperties: {}", minioProperties); // Логирование minio properties
 

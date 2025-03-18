@@ -18,13 +18,8 @@ public interface TaskService {
      */
     Task getTaskById(Long id);
 
-    /**
-     * Получить все задачи по ID пользователя.
-     *
-     * @param userId ID пользователя
-     * @return список задач
-     */
-    List<Task> getAllByUserId(Long userId);
+    List<Task> getAllByTeacherId(Long teacherId);
+
 
     /**
      * Получить все задачи, которые должны быть выполнены в ближайшее время.
