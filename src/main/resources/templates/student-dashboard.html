@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Моё обучение</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Шапка с фамилией и картинкой -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Моё обучение</h1>
+        <a th:href="@{/students/profile}">
+            <div>
+                <img th:if="${student != null and student.photoUrl != null and minio != null}"
+                     th:src="${minio.url + '/' + minio.bucket + '/' + student.photoUrl}"
+                     alt="Фотография ученика"
+                     width="150"
+                     height="150"
+                     class="rounded-circle">
+                <img th:unless="${student != null and student.photoUrl != null and minio != null}"
+                     src="/images/avatar.png"
+                     alt="Фотография по умолчанию"
+                     width="150"
+                     height="150"
+                     class="rounded-circle">
+            </div>
+        </a>
+        <br>
+
+    </div>
+
+    <!-- Задача от преподавателя -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Задачи от преподавателей</h5>
+            <div th:each="task : ${tasks}">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${task.title}">Заголовок задачи</h5>
+                        <p class="card-text" th:text="${task.description}">Описание задачи</p>
+                        <p class="card-text"><small class="text-muted" th:text="${task.expirationDate}">Дата выполнения</small></p>
+                        <div th:if="${task.videoUrl}">
+                            <iframe width="200" height="150"
+                                    th:src="${task.videoUrl}"
+                                    frameborder="0"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form th:action="@{/students/choose-teachers}" method="post">
+        <div th:each="teacher : ${teachers}">
+            <input type="checkbox" name="teacherIds" th:value="${teacher.id}">
+            <label th:text="${teacher.firstName + ' ' + teacher.lastName}"></label>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+
+    <!-- Кнопка выхода -->
+    <!--    <a th:href="@{/logout}" class="btn btn-danger">Выйти</a>-->
+
+    <a href="#" onclick="document.getElementById('logout-form').submit();" class="btn btn-danger">Выйти</a>
+    <form id="logout-form" th:action="@{/logout}" method="post" style="display: none;">
+        <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    </form>
+
+</div>
+</body>
+</html>

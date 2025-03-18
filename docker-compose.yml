@@ -1,0 +1,47 @@
+version: "3.8"
+
+
+#networks:
+#  app-network:
+#    driver: bridge
+
+services:
+  
+  postgres:
+    image: postgres:16
+    container_name: Education_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+#      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+#    networks:
+#      - app-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: Education_minio
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    command: server ~/minio --console-address :9090
+    ports:
+      - '9090:9090' # Порт консоли
+      - '9000:9000' # Порт API
+    volumes:
+      - minio-data:/minio
+#    networks:
+#      - app-network
+
+volumes:
+  postgres_data:
+    driver: local
+  minio-data:
+    driver: local
+
+
