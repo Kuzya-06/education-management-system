@@ -53,6 +53,8 @@ public class TeacherServiceImpl implements TeacherService {
             newTeacher.setCity("Город");
             newTeacher.setLastName("Фамилия");
             newTeacher.setFirstName("Имя");
+            newTeacher.setSpecialty("Специальность");
+            newTeacher.setDescription("Описание");
             newTeacher.setPhone("+71234567890");
             newTeacher.setEmail("email@email.com");
             newTeacher.setBirthDate(LocalDate.now());
@@ -78,6 +80,8 @@ public class TeacherServiceImpl implements TeacherService {
             Teacher teacherToUpdate = existingTeacher.get();
             teacherToUpdate.setFirstName(teacher.getFirstName());
             teacherToUpdate.setLastName(teacher.getLastName());
+            teacherToUpdate.setSpecialty(teacher.getSpecialty());
+            teacherToUpdate.setDescription(teacher.getDescription());
             teacherToUpdate.setBirthDate(teacher.getBirthDate());
             teacherToUpdate.setEmail(teacher.getEmail());
             teacherToUpdate.setPhone(teacher.getPhone());

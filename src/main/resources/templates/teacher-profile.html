@@ -87,6 +87,16 @@
         </div>
 
         <div class="mb-3">
+            <label for="speciality" class="form-label">Направление деятельности:</label>
+            <input type="text" class="form-control" id="speciality" name="speciality" th:value="${teacher.specialty}">
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание деятельности:</label>
+            <input type="text" class="form-control" id="description" name="description" th:value="${teacher.description}">
+        </div>
+
+        <div class="mb-3">
             <label for="birthDate" class="form-label">Дата рождения:</label>
             <input type="date" class="form-control" id="birthDate" name="birthDate" th:value="${teacher.birthDate}">
         </div>
