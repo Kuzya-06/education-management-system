@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kuz.education.auth.config.MyUserDetails;
 import ru.kuz.education.auth.model.MyUser;
+import ru.kuz.education.mailservice.model.MailType;
+import ru.kuz.education.mailservice.service.MailService;
 import ru.kuz.education.students.model.Student;
 import ru.kuz.education.image.model.UserImage;
 import ru.kuz.education.students.repository.StudentRepository;
@@ -17,6 +19,7 @@ import ru.kuz.education.teachers.repository.TeacherRepository;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -26,12 +29,14 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final ImageService imageService;
     private final TeacherRepository teacherRepository;
+    private final MailService mailService;
 
     public StudentServiceImpl(StudentRepository studentRepository,
-                              ImageService imageService, TeacherRepository teacherRepository) {
+                              ImageService imageService, TeacherRepository teacherRepository, MailService mailService) {
         this.studentRepository = studentRepository;
         this.imageService = imageService;
         this.teacherRepository = teacherRepository;
+        this.mailService = mailService;
     }
 
     @Override
@@ -78,6 +83,8 @@ public class StudentServiceImpl implements StudentService {
 
         // Сохраняем изменения в базе данных
         studentRepository.save(existingStudent);
+        mailService.sendEmail(existingStudent, MailType.REGISTRATION, new Properties());
+
         log.info("Профиль ученика успешно обновлен.");
 
     }

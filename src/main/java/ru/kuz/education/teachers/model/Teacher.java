@@ -23,7 +23,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString(exclude = "user")
+@ToString(exclude = {"user", "students"})
 @Entity
 @Table(name = "teachers")
 public class Teacher {

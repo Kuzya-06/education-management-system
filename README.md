@@ -29,3 +29,9 @@ CREATE DATABASE education;
 ```sql
 \q
 ```
+
+Настройка почты
+![img.png](img.png)
+
+## Crontab.guru
+сайт cron

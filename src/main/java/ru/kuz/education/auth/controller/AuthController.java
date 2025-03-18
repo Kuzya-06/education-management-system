@@ -51,6 +51,7 @@ public class AuthController {
             log.info(user.toString());
             authService.registerUser(user);
             redirectAttributes.addFlashAttribute("message", "Пользователь успешно зарегистрирован!");
+
             return new ModelAndView("redirect:/login");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", "Ошибка регистрации: " + e.getMessage());

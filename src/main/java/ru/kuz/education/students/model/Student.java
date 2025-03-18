@@ -32,31 +32,20 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(
-//            nullable = false,
-            name = "first_name"
-    )
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(
-//            nullable = false,
-            name = "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(
-//            nullable = false,
-            name = "birth_date")
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
-//    @Column(nullable = false)
     private String city;
 
-//    @Column(nullable = false)
     private String phone;
 
-    @Column(
-//            nullable = false,
-            unique = true)
+    @Column(unique = true)
     private String email;
 
     @Column
