@@ -9,9 +9,47 @@
 <div class="container mt-5">
     <h1>Выберите преподавателя</h1>
     <form th:action="@{/students/select-teacher}" method="post">
-        <div th:each="teacher : ${teachers}">
-            <input type="radio" name="teacherId" th:value="${teacher.id}" required>
-            <label th:text="${teacher.firstName + ' ' + teacher.lastName}"></label>
+        <div th:each="teacher : ${teachers}" class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <!-- Колонка для фотографии -->
+                    <div class="col-md-3">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <img th:if="${teacher != null and teacher.photoUrl != null and minio != null}"
+                                 th:src="${minio.url + '/' + minio.bucket + '/' + teacher.photoUrl}"
+                                 alt="Фотография преподавателя"
+                                 width="150"
+                                 height="150"
+                                 class="rounded-circle">
+                            <img th:unless="${teacher.photoUrl != null}"
+                                 src="/images/default-avatar.png"
+                                 alt="Фотография по умолчанию"
+                                 width="150"
+                                 height="150"
+                                 class="rounded-circle">
+                        </div>
+                    </div>
+                    <!-- Колонка для текста -->
+                    <div class="col-md-9">
+                        <h5 class="card-title" th:text="${teacher.firstName + ' ' + teacher.lastName}"></h5>
+                        <p class="card-text">
+                            <strong>Возраст:</strong>
+                            <span th:text="${#temporals.year(T(java.time.LocalDate).now()) - #temporals.year(teacher.birthDate)}"></span>
+                            лет
+                        </p>
+                        <p class="card-text">
+                            <strong>Специальность:</strong>
+                            <span th:text="${teacher.specialty}"></span>
+                        </p>
+                        <p class="card-text">
+                            <strong>Описание:</strong>
+                            <span th:text="${teacher.description}"></span>
+                        </p>
+                        <!-- Радиокнопка для выбора преподавателя -->
+                        <input type="radio" name="teacherId" th:value="${teacher.id}" required>
+                    </div>
+                </div>
+            </div>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
     </form>

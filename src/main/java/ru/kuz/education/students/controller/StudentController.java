@@ -117,6 +117,7 @@ public class StudentController {
     public ModelAndView selectTeacher(Model model) {
         List<Teacher> teachers = studentService.getAllTeachers();
         model.addAttribute("teachers", teachers);
+        model.addAttribute("minio", minioProperties);
         return new ModelAndView("select-teacher");
     }
 

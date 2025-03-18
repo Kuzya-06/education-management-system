@@ -44,7 +44,7 @@ public class Teacher {
     @Column
     private String specialty; // Специальность (например, детский психолог, логопед, специалист по ЛФК)
 
-    @Column(length = 1000) // Увеличиваем длину для текста
+    @Column(columnDefinition = "text")// Увеличиваем длину для текста
     private String description; // Описание о себе
 
     @Column(name = "birth_date")

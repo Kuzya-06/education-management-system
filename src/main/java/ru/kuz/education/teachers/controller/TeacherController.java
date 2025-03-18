@@ -126,15 +126,6 @@ public class TeacherController {
     public ModelAndView createTask(@ModelAttribute Task task,
                                    @RequestParam Long studentId,
                                    @AuthenticationPrincipal MyUserDetails userDetails) {
-//        log.info("Начало createTask()");
-//        if (userDetails == null) {
-//            log.warn("Пользователь не аутентифицирован. Перенаправление на страницу входа.");
-//            return new ModelAndView("redirect:/login");
-//        }
-//        log.info("Task => {}", task);
-//        Task createTask = taskService.createTask(task, userDetails);// Замените на реальный ID преподавателя
-//        log.info("createTask => {}", createTask);
-//        return new ModelAndView("teacher-dashboard");
 
         Teacher teacher = teacherService.getProfile(userDetails);
         task.setTeacher(teacher);
@@ -143,18 +134,5 @@ public class TeacherController {
         return new ModelAndView("redirect:/teachers/dashboard");
     }
 
-//    @GetMapping("/teachers/dashboard")
-//    public String getTeacherDashboard(Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
-//        Long teacherId = userDetails.getMyUser().getTeacher().getId();
-//        List<Student> students = studentService.findStudentsByTeacherId(teacherId);
-//        model.addAttribute("students", students);
-//        return "teacher-dashboard";
-//    }
-//
-//    @PostMapping("/teachers/assign-task")
-//    public String assignTask(@RequestParam Long studentId, @ModelAttribute Task task) {
-//        taskService.create(task, studentId);
-//        return "redirect:/teachers/dashboard";
-//    }
 
 }
