@@ -57,6 +57,13 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
+    public List<Task> getAllTasksForCurrentStudent(Long studentId) {
+        log.info("Получаем задачи для студента ID {}", studentId);
+        return taskRepository.findByStudentId(studentId);
+    }
+
+
+    @Override
     @Transactional
     public Task updateTask(Task task) {
         Task existingTask = getTaskById(task.getId());
@@ -106,5 +113,11 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> findTasksByStudentId(Long studentId) {
         log.info("начало метода findTasksByStudentId() с studentId = {}", studentId);
         return taskRepository.findTasksByStudentId(studentId);
+    }
+
+
+    public List<Task> getAllTasksForCurrentStudent() {
+        // Логика для получения задач текущего студента
+        return taskRepository.findAll(); // Пример
     }
 }

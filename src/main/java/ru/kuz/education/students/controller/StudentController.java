@@ -128,4 +128,19 @@ public class StudentController {
         return new ModelAndView("redirect:/students/dashboard");
     }
 
+
+    // Отображение деталей задачи
+    @GetMapping("/tasks/{id}")
+    public ModelAndView showTaskDetails(@PathVariable Long id, Model model) {
+        log.info("Загрузка деталей задачи ID {}", id);
+
+        Task task = taskService.getTaskById(id);
+        if (task == null) {
+            throw new RuntimeException("Задача не найдена");
+        }
+
+        model.addAttribute("task", task);
+        return new ModelAndView("task-details"); // task-details.html
+    }
+
 }

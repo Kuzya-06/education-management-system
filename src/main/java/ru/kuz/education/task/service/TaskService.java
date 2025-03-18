@@ -24,7 +24,7 @@ public interface TaskService {
 
     Task save(Task task);
 
-
+    List<Task> getAllTasksForCurrentStudent(Long studentId);
 
     /**
      * Получить все задачи, которые должны быть выполнены в ближайшее время.

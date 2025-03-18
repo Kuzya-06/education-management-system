@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Детали задачи</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title" th:text="${task.title}">Заголовок задачи</h1>
+            <p class="card-text" th:text="${task.description}">Описание задачи</p>
+            <p class="card-text"><small class="text-muted" th:text="${task.expirationDate}">Дата выполнения</small></p>
+            <p><strong>Преподаватель:</strong> <span th:text="${task.teacher.firstName + ' ' + task.teacher.lastName}"></span></p>
 
+            <!-- Блок с видео -->
+            <div th:if="${task.videoUrl != null and not #strings.isEmpty(task.videoUrl)}">
+                <p><strong>Ссылка на видео:</strong> <a th:href="${task.videoUrl}" target="_blank" th:text="${task.videoUrl}"></a></p>
+
+                <!-- Если это YouTube -->
+                <div th:if="${#strings.contains(task.videoUrl, 'youtube') or #strings.contains(task.videoUrl, 'youtu.be')}">
+                    <iframe width="560" height="315" th:src="${task.videoUrl}" frameborder="0" allowfullscreen></iframe>
+                </div>
+
+                <!-- Если это mp4 -->
+                <div th:unless="${#strings.contains(task.videoUrl, 'youtube') or #strings.contains(task.videoUrl, 'youtu.be')}">
+                    <video width="560" height="315" controls>
+                        <source th:src="${task.videoUrl}" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                </div>
+            </div>
+
+            <a th:href="@{/students/dashboard}" class="btn btn-primary">Назад к списку задач</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>

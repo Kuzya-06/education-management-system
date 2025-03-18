@@ -42,7 +42,9 @@
             <div th:each="task : ${tasks}">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${task.title}">Заголовок задачи</h5>
+                        <a th:href="@{/students/tasks/{id}(id=${task.id})}" class="text-decoration-none">
+                            <h5 class="card-title" th:text="${task.title}">Заголовок задачи</h5>
+                        </a>
                         <p class="card-text" th:text="${task.description}">Описание задачи</p>
                         <p class="card-text"><small class="text-muted" th:text="${task.expirationDate}">Дата выполнения</small></p>
                         <p><strong>Преподаватель:</strong> <span th:text="${task.teacher.firstName + ' ' + task.teacher.lastName}"></span></p>

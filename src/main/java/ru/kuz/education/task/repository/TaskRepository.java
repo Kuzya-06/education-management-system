@@ -13,13 +13,7 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-//    /**
-//     * Найти все задачи по ID пользователя.
-//     *
-//     * @param userId ID пользователя
-//     * @return список задач
-//     */
-//    List<Task> findAllByUserId(Long userId);
+
 
     List<Task> findByTeacherId(Long teacherId);
 
@@ -37,5 +31,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findTasksByStudentId(@Param("studentId") Long studentId);
 
     List<Task> findByStudentIdAndTeacherId(Long studentId, Long teacherId);
+
+    List<Task> findByStudentId(Long studentId);
 
 }
