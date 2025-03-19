@@ -35,8 +35,8 @@ public class ReminderImpl implements Reminder {
      * Отвечает за отправку напоминаний ученикам о задачах, срок выполнения которых скоро истекает.
      */
 
-    //    @Scheduled(cron = "0 0 * * * *") // раз в час
-    @Scheduled(cron = "0 * * * * *") // раз в минуту
+        @Scheduled(cron = "0 0 * * * *") // раз в час
+//    @Scheduled(cron = "0 * * * * *") // раз в минуту
     @Override
     public void remindForTask() {
         log.info("Starting reminder");

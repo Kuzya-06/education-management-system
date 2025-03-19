@@ -45,7 +45,7 @@ public class MailServiceImpl implements MailService {
     @SneakyThrows
     private void sendRegistrationEmail(final Student user,
                                        final Properties params) {
-        log.info("Sending registration email to " + user.getEmail());
+        log.info("Sending registration email to {}", user.getEmail());
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
                 false,
@@ -60,7 +60,7 @@ public class MailServiceImpl implements MailService {
     @SneakyThrows
     private void sendReminderEmail(final Student user,
                                    final Properties params) {
-        log.info("Sending reminder email to " + user.getEmail());
+        log.info("Sending reminder email to {}", user.getEmail());
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
                 false,
@@ -75,11 +75,11 @@ public class MailServiceImpl implements MailService {
     @SneakyThrows
     private String getRegistrationEmailContent(final Student user,
                                                final Properties properties) {
-        log.info("Sending registration email Content to " + user.getEmail());
+        log.info("Sending registration email Content to {}", user.getEmail());
         StringWriter writer = new StringWriter();
         Map<String, Object> model = new HashMap<>();
         model.put("name", user.getFirstName());
-        configuration.getTemplate("register.ftlh")
+        configuration.getTemplate("register-mail.ftlh")
                 .process(model, writer);
         return writer.getBuffer().toString();
     }
@@ -87,7 +87,7 @@ public class MailServiceImpl implements MailService {
     @SneakyThrows
     private String getReminderEmailContent(final Student user,
                                            final Properties properties) {
-        log.info("Sending reminder email Content to " + user.getEmail());
+        log.info("Sending reminder email Content to {}", user.getEmail());
         StringWriter writer = new StringWriter();
         Map<String, Object> model = new HashMap<>();
         model.put("name", user.getFirstName());
