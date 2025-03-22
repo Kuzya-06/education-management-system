@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # education2-system
 ## Система управления обучением (Education Management System)
 
@@ -35,3 +36,7 @@ CREATE DATABASE education;
 
 ## Crontab.guru
 сайт cron
+=======
+# education-management-system
+Система управления обучением (Education Management System)
+>>>>>>> 0ef05366575be202973a0aa7b57a4de45d274700
