@@ -71,6 +71,14 @@
   </div>
 </div>
 
+<!-- Отдельная форма для загрузки фотографии -->
+<div class="mt-3">
+  <label for="photo" class="form-label">Загрузить фотографию:</label>
+  <input type="file" class="form-control" id="photo" name="photo">
+  <button type="button" class="btn btn-secondary mt-2"
+          th:onclick="'uploadPhoto(' + ${student.user.id} + ')'">Загрузить</button>
+</div>
+
   <!-- Форма для редактирования профиля -->
   <form th:action="@{/students/profile}" method="post">
 
@@ -105,15 +113,10 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a th:href="@{/students/dashboard}" class="btn btn-primary">Назад</a>
   </form>
 
-<!-- Отдельная форма для загрузки фотографии -->
-<div class="mt-3">
-  <label for="photo" class="form-label">Загрузить фотографию:</label>
-  <input type="file" class="form-control" id="photo" name="photo">
-  <button type="button" class="btn btn-secondary mt-2"
-          th:onclick="'uploadPhoto(' + ${student.user.id} + ')'">Загрузить</button>
-</div>
+
 
   <!-- Кнопка выхода -->
 <a href="#" onclick="document.getElementById('logout-form').submit();" class="btn btn-danger">Выйти</a>

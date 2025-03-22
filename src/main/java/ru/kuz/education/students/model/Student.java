@@ -13,6 +13,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.ToString;
 import ru.kuz.education.auth.model.MyUser;
@@ -25,7 +26,7 @@ import java.util.Set;
 @Data
 @ToString(exclude = "user")
 @Entity
-@Table(name = "students")
+@Table(name = "students", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}, name = "unique_email_not_null"))
 public class Student {
 
     @Id
@@ -45,7 +46,7 @@ public class Student {
 
     private String phone;
 
-    @Column(unique = true)
+    @Column
     private String email;
 
     @Column

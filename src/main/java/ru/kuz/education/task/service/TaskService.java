@@ -36,11 +36,8 @@ public interface TaskService {
 
     /**
      * Обновить задачу.
-     *
-     * @param task задача
-     * @return обновленная задача
      */
-    Task updateTask(Task task);
+    void updateTask(Long id, Task task);
 
     /**
      * Создать новую задачу.

@@ -65,14 +65,18 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task updateTask(Task task) {
-        Task existingTask = getTaskById(task.getId());
+    public void updateTask(Long id, Task task) {
+        log.info("Начало updateTask() {},task {}", id, task);
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Задача не найдена"));
+        log.info("До. existingTask {}", existingTask);
         existingTask.setTitle(task.getTitle());
         existingTask.setDescription(task.getDescription());
-        existingTask.setStatus(task.getStatus());
         existingTask.setExpirationDate(task.getExpirationDate());
         existingTask.setVideoUrl(task.getVideoUrl());
-        return taskRepository.save(existingTask);
+        existingTask.setStudent(task.getStudent());
+        log.info("После. existingTask {}", existingTask);
+        taskRepository.save(existingTask);
     }
 
     @Override

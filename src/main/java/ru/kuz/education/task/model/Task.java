@@ -58,7 +58,21 @@ public class Task implements Serializable {
     private List<String> images;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id", nullable = true)
     private Student student;
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", teacher=" + teacher +
+                ", title='" + title + '\'' +
+                ", LengthDescription='" + description.length() + '\'' +
+                ", status=" + status +
+                ", expirationDate=" + expirationDate +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", images=" + images +
+                ", student=" + student.getId() + " "+student.getFirstName()+
+                '}';
+    }
 }

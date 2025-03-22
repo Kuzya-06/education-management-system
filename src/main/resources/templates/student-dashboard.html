@@ -24,10 +24,14 @@
                      width="100"
                      height="100"
                      class="rounded-circle me-3">
-                <div>
+                <div th:if="${student != null and student.firstName != null and student.lastName != null}">
                     <h2 class="mb-0" th:text="${student.firstName + ' ' + student.lastName}">Имя Фамилия</h2>
-                    <p class="text-muted mb-0" th:text="${student.email}">email@example.com</p>
                 </div>
+
+                <p class="text-muted mb-0" th:if="${student != null and student.email != null}" th:text="${student.email}">
+                    email@example.com
+                </p>
+
             </a>
         </div>
     </div>

@@ -11,7 +11,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ru.kuz.education.mailservice.model.MailType;
 import ru.kuz.education.mailservice.service.MailService;
-import ru.kuz.education.students.controller.StudentController;
 import ru.kuz.education.students.model.Student;
 
 import java.io.StringWriter;
@@ -45,16 +44,21 @@ public class MailServiceImpl implements MailService {
     @SneakyThrows
     private void sendRegistrationEmail(final Student user,
                                        final Properties params) {
-        log.info("Sending registration email to {}", user.getEmail());
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
-                false,
-                "UTF-8");
-        helper.setSubject("Спасибо за регистрацию, " + user.getFirstName());
-        helper.setTo(user.getEmail());
-        String emailContent = getRegistrationEmailContent(user, params);
-        helper.setText(emailContent, true);
-        mailSender.send(mimeMessage);
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            log.info("Sending registration email to NULL");
+
+        }else{
+            log.info("Sending registration email to {}", user.getEmail());
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
+                    false,
+                    "UTF-8");
+            helper.setSubject("Спасибо за регистрацию, " + user.getFirstName());
+            helper.setTo(user.getEmail());
+            String emailContent = getRegistrationEmailContent(user, params);
+            helper.setText(emailContent, true);
+            mailSender.send(mimeMessage);
+        }
     }
 
     @SneakyThrows
@@ -81,7 +85,9 @@ public class MailServiceImpl implements MailService {
         model.put("name", user.getFirstName());
         configuration.getTemplate("register-mail.ftlh")
                 .process(model, writer);
-        return writer.getBuffer().toString();
+        String mailString = writer.getBuffer().toString();
+        log.info("mailString: {}", mailString);
+        return mailString;
     }
 
     @SneakyThrows

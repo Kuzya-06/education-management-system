@@ -14,7 +14,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+#    show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   mail:

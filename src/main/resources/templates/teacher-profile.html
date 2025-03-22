@@ -73,6 +73,14 @@
              class="rounded-circle">
     </div>
 
+    <!-- Отдельная форма для загрузки фотографии -->
+    <div class="mt-3">
+        <label for="photo" class="form-label">Загрузить фотографию:</label>
+        <input type="file" class="form-control" id="photo" name="photo">
+        <button type="button" class="btn btn-secondary mt-2"
+                th:onclick="'uploadPhoto(' + ${teacher.user.id} + ')'">Загрузить
+        </button>
+    </div>
     <!-- Форма для редактирования профиля -->
     <form th:action="@{/teachers/profile}" method="post">
 
@@ -93,7 +101,8 @@
 
         <div class="mb-3">
             <label for="description" class="form-label">Описание деятельности:</label>
-            <input type="text" class="form-control" id="description" name="description" th:value="${teacher.description}">
+            <input type="text" class="form-control" id="description" name="description"
+                   th:value="${teacher.description}">
         </div>
 
         <div class="mb-3">
@@ -117,15 +126,10 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a th:href="@{/teachers/dashboard}" class="btn btn-primary">Назад</a>
     </form>
 
-    <!-- Отдельная форма для загрузки фотографии -->
-    <div class="mt-3">
-        <label for="photo" class="form-label">Загрузить фотографию:</label>
-        <input type="file" class="form-control" id="photo" name="photo">
-        <button type="button" class="btn btn-secondary mt-2"
-                th:onclick="'uploadPhoto(' + ${teacher.user.id} + ')'">Загрузить</button>
-    </div>
+
 
     <!-- Кнопка выхода -->
     <a href="#" onclick="document.getElementById('logout-form').submit();" class="btn btn-danger">Выйти</a>

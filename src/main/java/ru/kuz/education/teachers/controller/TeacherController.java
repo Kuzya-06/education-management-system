@@ -122,6 +122,24 @@ public class TeacherController {
         teacherService.uploadImage(userId, image);
     }
 
+    @GetMapping("/tasks/create")
+    public ModelAndView showCreateTaskPage(@AuthenticationPrincipal MyUserDetails userDetails,
+                                           Model model) {
+        Teacher teacher = teacherService.getProfile(userDetails);
+        if (teacher == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        // Получаем всех учеников, которые выбрали этого преподавателя
+        List<Student> students = studentService.getStudentsByTeacherId(teacher.getId());
+
+        model.addAttribute("students", students);
+        model.addAttribute("task", new Task()); // Пустой объект задачи для формы
+
+        return new ModelAndView("create-task"); // Имя шаблона для страницы создания задачи
+    }
+
+
     @PostMapping("/tasks")
     public ModelAndView createTask(@ModelAttribute Task task,
                                    @RequestParam Long studentId,
@@ -134,5 +152,24 @@ public class TeacherController {
         return new ModelAndView("redirect:/teachers/dashboard");
     }
 
+
+
+    @PostMapping("/tasks/update/{id}")
+    public ModelAndView updateTask(
+            @PathVariable Long id,
+            @ModelAttribute Task task) {
+        log.info("Начало updateTask() по id = {}, task = {}", id, task);
+        taskService.updateTask(id, task);
+        return new ModelAndView("redirect:/teachers/dashboard");
+    }
+
+
+    @PostMapping("/tasks/delete/{id}")
+    public ModelAndView deleteTask(@PathVariable Long id) {
+        log.info("Начало deleteTask() по id = {}", id);
+        taskService.deleteTask(id);
+        log.info("Удалили id = {}", id);
+        return new ModelAndView("redirect:/teachers/dashboard");
+    }
 
 }

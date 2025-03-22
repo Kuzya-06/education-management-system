@@ -13,7 +13,9 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findByTeacherId(Long teacherId);
+    @Query("SELECT t FROM Task t LEFT JOIN FETCH t.student WHERE t.teacher.id = :teacherId")
+    List<Task> findByTeacherId(@Param("teacherId") Long teacherId);
+
 
     /**
      * Найти все задачи, которые должны быть выполнены в указанный период.

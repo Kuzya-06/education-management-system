@@ -40,6 +40,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional()
     public Student getProfile(MyUserDetails userDetails) {
         // Получаем MyUser из MyUserDetails
         MyUser user = userDetails.getMyUser();
@@ -52,19 +53,13 @@ public class StudentServiceImpl implements StudentService {
         if (student == null) {
             student = new Student();
             student.setUser(user); // Устанавливаем связь с пользователем
-            student.setCity("Город");
-            student.setLastName("Фамилия");
-            student.setFirstName("Имя");
-            student.setPhone("+71234567890");
-            student.setEmail("email@email.com");
-            student.setBirthDate(LocalDate.now());
-
             studentRepository.save(student); // Сохраняем в базу данных
         }
         return student;
     }
 
     @Override
+    @Transactional
     public void updateProfile(MyUserDetails userDetails, Student student) {
         // Получаем MyUser из MyUserDetails
         MyUser user = userDetails.getMyUser();
@@ -74,12 +69,21 @@ public class StudentServiceImpl implements StudentService {
         log.info("Student из Repository => {}", existingStudent);
 
         // Обновляем данные профиля
-        existingStudent.setFirstName(student.getFirstName());
-        existingStudent.setLastName(student.getLastName());
+        if (!student.getFirstName().isBlank()) {
+            existingStudent.setFirstName(student.getFirstName());
+        }
+        if (!student.getLastName().isBlank()) {
+            existingStudent.setLastName(student.getLastName());
+        }
+        if (!student.getEmail().isBlank()) {
+            existingStudent.setEmail(student.getEmail());
+        }
+        if (!student.getPhone().isBlank()) {existingStudent.setPhone(student.getPhone());}
+
         existingStudent.setBirthDate(student.getBirthDate());
         existingStudent.setCity(student.getCity());
-        existingStudent.setPhone(student.getPhone());
-        existingStudent.setEmail(student.getEmail());
+
+
 
         // Сохраняем изменения в базе данных
         studentRepository.save(existingStudent);
@@ -99,11 +103,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Teacher> getAllTeachers() {
         return teacherRepository.findAll();
     }
 
     @Override
+    @Transactional
     public void assignTeacher(Long studentId, Long teacherId) {
         Student student = studentRepository.findById(studentId).orElseThrow();
         Teacher teacher = teacherRepository.findById(teacherId).orElseThrow();
@@ -113,17 +119,20 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long getSelectedTeacherId(Long studentId) {
         return studentRepository.findTeacherIdByStudentId(studentId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Student getStudentById(Long studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Студент не найден"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Student> getStudentsByTeacherId(Long teacherId) {
         return studentRepository.findByTeachersId(teacherId);
     }

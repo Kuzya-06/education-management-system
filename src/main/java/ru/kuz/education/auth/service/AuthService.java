@@ -24,13 +24,13 @@ public class AuthService {
 
     @Transactional
     public void registerUser(MyUser user) {
-        log.info("Begin addUser(). user: " + user);
+        log.info("Begin addUser(). user: {}", user);
         if (repository.findByName(user.getName()).isPresent()) {
-            log.info("Логин уже занят! user: " + user.getName());
+            log.info("Логин уже занят! user: {}", user.getName());
             throw new RuntimeException("Логин уже занят!");
         }
         user.setPassword(encoder.encode(user.getPassword()));
         repository.save(user);
-        log.info("Register user: " + user);
+        log.info("Register user: {}", user);
     }
 }

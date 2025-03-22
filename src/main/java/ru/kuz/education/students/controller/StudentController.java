@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import ru.kuz.education.auth.config.MyUserDetails;
+import ru.kuz.education.auth.model.MyUser;
 import ru.kuz.education.students.model.Student;
 import ru.kuz.education.image.model.UserImage;
 import ru.kuz.education.students.service.StudentService;
@@ -124,7 +125,10 @@ public class StudentController {
     @PostMapping("/select-teacher")
     public ModelAndView saveSelectedTeacher(@AuthenticationPrincipal MyUserDetails userDetails,
                                             @RequestParam Long teacherId) {
-        studentService.assignTeacher(userDetails.getMyUser().getStudent().getId(), teacherId);
+
+        Student profile = studentService.getProfile(userDetails);
+        log.info("teacherId = {}", teacherId);
+        studentService.assignTeacher(profile.getId(), teacherId);
         return new ModelAndView("redirect:/students/dashboard");
     }
 

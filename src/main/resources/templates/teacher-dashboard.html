@@ -13,22 +13,22 @@
         <br>
         <a th:href="@{/teachers/profile}" class="d-flex align-items-center text-decoration-none">
 
-                <img th:if="${teacher != null and teacher.photoUrl != null and minio != null}"
-                     th:src="${minio.url + '/' + minio.bucket + '/' + teacher.photoUrl}"
-                     alt="Фотография преподавателя"
-                     width="150"
-                     height="150"
-                     class="rounded-circle">
-                <img th:unless="${teacher != null and teacher.photoUrl != null and minio != null}"
-                     src="/images/avatar.png"
-                     alt="Фотография по умолчанию"
-                     width="150"
-                     height="150"
-                     class="rounded-circle">
-                <div>
-                    <h2 class="mb-0" th:text="${teacher.firstName + ' ' + teacher.lastName}">Имя Фамилия</h2>
-                    <p class="text-muted mb-0" th:text="${teacher.email}">email@example.com</p>
-                </div>
+            <img th:if="${teacher != null and teacher.photoUrl != null and minio != null}"
+                 th:src="${minio.url + '/' + minio.bucket + '/' + teacher.photoUrl}"
+                 alt="Фотография преподавателя"
+                 width="150"
+                 height="150"
+                 class="rounded-circle">
+            <img th:unless="${teacher != null and teacher.photoUrl != null and minio != null}"
+                 src="/images/avatar.png"
+                 alt="Фотография по умолчанию"
+                 width="150"
+                 height="150"
+                 class="rounded-circle">
+            <div>
+                <h2 class="mb-0" th:text="${teacher.firstName + ' ' + teacher.lastName}">Имя Фамилия</h2>
+                <p class="text-muted mb-0" th:text="${teacher.email}">email@example.com</p>
+            </div>
 
         </a>
     </div>
@@ -39,41 +39,35 @@
             <h5 class="card-title">Мои ученики</h5>
             <ul class="list-group">
                 <li th:each="student : ${students}" class="list-group-item">
-                    <span th:text="${student.firstName + ' ' + student.lastName}"></span>
+                    <div class="row">
+                        <!-- Колонка для фотографии -->
+                        <div class="col-md-3">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img th:if="${student != null and student.photoUrl != null and minio != null}"
+                                     th:src="${minio.url + '/' + minio.bucket + '/' + student.photoUrl}"
+                                     alt="Фотография"
+                                     width="100"
+                                     height="100"
+                                     class="rounded-circle">
+                            </div>
+                        </div>
+                        <!-- Колонка для информации об ученике -->
+                        <div class="col-md-9">
+                            <h5 th:text="${student.firstName + ' ' + student.lastName}"></h5>
+                            <p class="text-muted" th:text="'ДР: ' + ${student.getBirthDate()}"></p>
+                            <p class="text-muted" th:text="'Город: ' + ${student.city}"></p>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
     </div>
 
-    <!-- Форма для создания задачи -->
+    <!-- Ссылка на страницу создания задачи -->
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">Создать задачу</h5>
-            <form th:action="@{/teachers/tasks}" method="post">
-                <div class="mb-3">
-                    <label for="title" class="form-label">Заголовок задачи:</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Описание задачи:</label>
-                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="expirationDate" class="form-label">Дата выполнения:</label>
-                    <input type="datetime-local" class="form-control" id="expirationDate" name="expirationDate" required>
-                </div>
-                <div class="mb-3">
-                    <label for="videoUrl" class="form-label">Ссылка на видео:</label>
-                    <input type="url" class="form-control" id="videoUrl" name="videoUrl">
-                </div>
-                <div class="mb-3">
-                    <label for="studentId" class="form-label">Выберите ученика:</label>
-                    <select class="form-control" id="studentId" name="studentId" required>
-                        <option th:each="student : ${students}" th:value="${student.id}" th:text="${student.firstName + ' ' + student.lastName}"></option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Создать задачу</button>
-            </form>
+            <a th:href="@{/teachers/tasks/create}" class="btn btn-primary">Перейти к созданию задачи</a>
         </div>
     </div>
 
@@ -84,16 +78,110 @@
             <div th:each="task : ${tasks}">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${task.title}">Заголовок задачи</h5>
-                        <p class="card-text" th:text="${task.description}">Описание задачи</p>
-                        <p class="card-text"><small class="text-muted" th:text="${task.expirationDate}">Дата выполнения</small></p>
+                        <p><strong>Заголовок задачи:</strong>
+                        <h5 class="card-title" th:text="${task.title}">Заголовок задачи</h5></p>
+                        <p><strong>Описание задачи:</strong>
+                        <p class="card-text" th:text="${task.description}">Описание задачи</p></p>
+                        <p><strong>Дата выполнения:</strong>
+                        <p class="card-text"><small class="text-muted" th:text="${task.expirationDate}">Дата
+                            выполнения</small></p></p>
                         <p><strong>Ученик:</strong>
-                            <span th:if="${task.student != null}" th:text="${task.student.firstName + ' ' + task.student.lastName}"></span>
+                            <span th:if="${task.student != null}"
+                                  th:text="${task.student.firstName + ' ' + task.student.lastName}"></span>
                             <span th:unless="${task.student != null}">Не назначено</span>
                         </p>
-                        <iframe width="275" height="200" th:src="${task.videoUrl}" frameborder="0" allowfullscreen></iframe>
+                        <iframe width="275" height="200" th:src="${task.videoUrl}" frameborder="0"
+                                allowfullscreen></iframe>
+
+                        <!-- Кнопки для обновления и удаления задачи -->
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#updateTaskModal' + ${task.id}">
+                                Обновить
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#deleteTaskModal' + ${task.id}">
+                                Удалить
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Модальное окно для обновления задачи -->
+                <div class="modal fade" th:id="'updateTaskModal' + ${task.id}" tabindex="-1"
+                     aria-labelledby="updateTaskModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateTaskModalLabel">Обновить задачу</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/teachers/tasks/update/{id}(id=${task.id})}" method="post">
+                                    <div class="mb-3">
+                                        <label for="updateTitle" class="form-label">Заголовок задачи:</label>
+                                        <input type="text" class="form-control" id="updateTitle" name="title"
+                                               th:value="${task.title}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="updateDescription" class="form-label">Описание задачи:</label>
+                                        <textarea class="form-control" id="updateDescription" name="description"
+                                                  rows="3" required th:text="${task.description}"></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="updateExpirationDate" class="form-label">Дата выполнения:</label>
+                                        <input type="datetime-local" class="form-control" id="updateExpirationDate"
+                                               name="expirationDate" required
+                                               th:value="${#temporals.format(task.expirationDate, 'yyyy-MM-dd''T''HH:mm')}">
+
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="updateVideoUrl" class="form-label">Ссылка на видео:</label>
+                                        <input type="url" class="form-control" id="updateVideoUrl" name="videoUrl"
+                                               th:value="${task.videoUrl}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="updateStudentId" class="form-label">Выберите ученика:</label>
+                                        <select class="form-control" id="updateStudentId" name="student.id" required>
+                                            <option th:each="student : ${students}"
+                                                    th:value="${student.id}"
+                                                    th:selected="${task.student != null and student.id == task.student.id}"
+                                                    th:text="${student.firstName + ' ' + student.lastName}"></option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Обновить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Модальное окно для удаления задачи -->
+                <div class="modal fade" th:id="'deleteTaskModal' + ${task.id}" tabindex="-1"
+                     aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteTaskModalLabel">Удалить задачу</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Вы уверены, что хотите удалить задачу "<span th:text="${task.title}"></span>"?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <form th:action="@{/teachers/tasks/delete/{id}(id=${task.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -104,5 +192,7 @@
         <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     </form>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
